@@ -18,6 +18,7 @@ jobs:
       - name: Build Application
         run: |
           cd livewall
+          powershell ./tools/build.ps1
           cargo build --release
 
       - name: Upload Executables
