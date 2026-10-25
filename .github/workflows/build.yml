@@ -15,6 +15,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Check Livewall Folder Contents
+      - name: Build Application
         run: |
-          dir livewall
+          cd livewall
+          cargo build --release
+
+      - name: Upload Executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: LiveWallpaper
+          path: livewall/target/release/*.exe
