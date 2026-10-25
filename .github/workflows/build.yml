@@ -29,6 +29,10 @@ jobs:
         shell: pwsh
         run: choco install innosetup -y --no-progress
 
+      - name: Install 7-Zip
+        shell: pwsh
+        run: choco install 7zip -y --no-progress
+
       - name: Install libmpv dependency
         shell: pwsh
         run: |
