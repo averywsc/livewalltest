@@ -25,13 +25,21 @@ jobs:
         shell: pwsh
         run: cargo install tauri-cli --version "^2" --locked
 
-      - name: Install Inno Setup
-        shell: pwsh
-        run: choco install innosetup -y --no-progress
-
       - name: Install 7-Zip
         shell: pwsh
         run: choco install 7zip -y --no-progress
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $isSetup = "$env:TEMP\innosetup.exe"
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile $isSetup
+          Start-Process $isSetup -ArgumentList '/VERYSILENT /NORESTART /DIR="$env:ProgramFiles(x86)\Inno Setup 6"' -Wait
+          $iscc = "$env:ProgramFiles(x86)\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            throw "ISCC.exe not found at $iscc"
+          }
 
       - name: Install libmpv dependency
         shell: pwsh
