@@ -21,19 +21,26 @@ $code = $LASTEXITCODE
 Pop-Location
 if ($code -ne 0) { throw "settings build failed" }
 
+$rendererExe = Join-Path $root "target\release\livewall.exe"
+$settingsExe = Join-Path $root "settings\target\release\livewall-settings.exe"
+if (-not (Test-Path $rendererExe)) { throw "Renderer binary not found at $rendererExe" }
+if (-not (Test-Path $settingsExe)) { throw "Settings binary not found at $settingsExe" }
+
 Write-Host "3/5 Packing the portable payload"
 New-Item -ItemType Directory -Force dist | Out-Null
 $stage = "dist\stage"
 if (Test-Path $stage) { Remove-Item $stage -Recurse -Force }
 New-Item -ItemType Directory $stage | Out-Null
-Copy-Item target\release\livewall.exe, target\release\livewall-settings.exe, vendor\libmpv-2.dll, LICENSE, THIRD_PARTY.md $stage
+Copy-Item $rendererExe, $settingsExe, (Join-Path $root "vendor\libmpv-2.dll"), (Join-Path $root "LICENSE"), (Join-Path $root "THIRD_PARTY.md") $stage -Force
 if (Test-Path dist\payload.zip) { Remove-Item dist\payload.zip }
 Compress-Archive -Path "$stage\*" -DestinationPath dist\payload.zip
 
 Write-Host "4/5 Building the portable exe"
 cargo build --release -p livewall-portable
 if ($LASTEXITCODE -ne 0) { throw "portable build failed" }
-Copy-Item target\release\livewall-portable.exe dist\LiveWallpaper-Portable.exe -Force
+$portableExe = Join-Path $root "target\release\livewall-portable.exe"
+if (-not (Test-Path $portableExe)) { throw "Portable binary not found at $portableExe" }
+Copy-Item $portableExe dist\LiveWallpaper-Portable.exe -Force
 
 Write-Host "5/5 Building the installer"
 $iscc = @("$env:ProgramFiles(x86)\Inno Setup 6\ISCC.exe", "$env:ProgramFiles\Inno Setup 6\ISCC.exe", "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1
