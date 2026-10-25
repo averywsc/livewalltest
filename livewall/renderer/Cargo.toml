@@ -1,0 +1,25 @@
+[package]
+name = "livewall"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Low-resource live wallpaper renderer for Windows 10 and 11"
+
+[dependencies]
+libloading = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rodio = { version = "=0.20.1", default-features = false, features = ["symphonia-all"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp", "bmp"] }
+
+[dependencies.windows-sys]
+version = "0.59"
+features = [
+  "Win32_Foundation", "Win32_Graphics_Gdi", "Win32_Graphics_Dwm", "Win32_UI_WindowsAndMessaging",
+  "Win32_UI_Shell", "Win32_UI_Accessibility", "Win32_System_LibraryLoader", "Win32_System_Power",
+  "Win32_System_RemoteDesktop", "Win32_System_Pipes", "Win32_System_IO", "Win32_System_Threading",
+  "Win32_System_Registry", "Win32_Storage_FileSystem", "Win32_Security",
+]
+
+[build-dependencies]
+winres = "0.1"

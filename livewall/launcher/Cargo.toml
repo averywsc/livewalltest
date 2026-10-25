@@ -1,0 +1,9 @@
+[package]
+name = "livewall-portable"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Single-file portable launcher for Live Wallpaper"
+
+[dependencies]
+zip = { version = "0.6", default-features = false, features = ["deflate"] }
