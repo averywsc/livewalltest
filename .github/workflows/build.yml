@@ -33,9 +33,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          $isSetup = "$env:TEMP\innosetup.exe"
-          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile $isSetup
-          Start-Process $isSetup -ArgumentList '/VERYSILENT /NORESTART /DIR="$env:ProgramFiles(x86)\Inno Setup 6"' -Wait
+          choco install innosetup -y --no-progress
           $iscc = "$env:ProgramFiles(x86)\Inno Setup 6\ISCC.exe"
           if (-not (Test-Path $iscc)) {
             throw "ISCC.exe not found at $iscc"
