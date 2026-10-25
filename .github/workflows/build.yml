@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-           - name: Build Application
+      - name: Build Application
         run: |
           cd livewall
           powershell ./tools/build.ps1
@@ -24,4 +24,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LiveWallpaper
-          path: livewall/target/release/*.exe
+          path: |
+            livewall/dist/*.exe
+            livewall/target/release/*.exe
