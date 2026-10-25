@@ -15,9 +15,29 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build Application
+      - name: Install libmpv dependency
+        shell: pwsh
         run: |
-          cd livewall
+          $ErrorActionPreference = "Stop"
+          Set-Location livewall
+
+          New-Item -ItemType Directory -Force vendor | Out-Null
+
+          # Replace this with the actual LGPL x86_64 libmpv dev release asset you want to use.
+          # Example source from README: shinchiro mpv-winbuild-cmake releases.
+          $url = "https://example.invalid/mpv-dev-lgpl-x86_64.7z"
+
+          Invoke-WebRequest -Uri $url -OutFile mpv.7z
+          7z x mpv.7z -o"$PWD\vendor" -y
+
+          if (-not (Test-Path "$PWD\vendor\libmpv-2.dll")) {
+            throw "libmpv-2.dll was not found in vendor after extraction."
+          }
+
+      - name: Build Application
+        shell: pwsh
+        run: |
+          Set-Location livewall
           powershell ./tools/build.ps1
 
       - name: Upload Executables
